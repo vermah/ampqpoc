@@ -1,0 +1,15 @@
+{
+  "name": "ampqpoc",
+  "version": "1.0.0",
+  "description": "Publisher & Consumer for ampq",
+  "main": "publisher.js",
+  "dependencies": {
+    "amqplib": "^0.5.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Monotype"
+}
