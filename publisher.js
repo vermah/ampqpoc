@@ -1,9 +1,18 @@
 var amqp = require('amqplib/callback_api');
+const uri = ""; //Provide  rabbitmq connection uri
+const filedownloadurl = ""; //provide file download url
+const publishqueuename = ""; //provide publish queue name
+const consumerqueuename = ""; //provide response queue name. consumer should be listening to this
 
 // if the connection is closed or fails to be established at all, we will reconnect
 var amqpConn = null;
 function start() {
-    amqp.connect("amqp://guest:guest@rabbitmq-test-rabbitmq-1493687737.us-east-1.elb.amazonaws.com:5672?heartbeat=60", function (err, conn) {
+    if (uri == '' || filedownloadurl == '' || publishqueuename == '' || consumerqueuename == '') {
+        console.log(`MIssing config values uri ${uri}, filedownloadurl ${filedownloadurl}, 
+        publishqueuename ${publishqueuename}, consumerqueuename ${consumerqueuename}`);
+        return true;
+    }
+    amqp.connect(uri, function (err, conn) {
         if (err) {
             console.error("[AMQP Error]", err);
 
@@ -57,7 +66,7 @@ function publish(queue, content) {
         }, function (err, ok) {
             if (err !== null) console.warn('Message nacked!');
             else console.log('Message acked');
-            
+
         });
         // pubChannel.publish(exchange, routingKey, content, {
         //     persistent: true,
@@ -87,13 +96,13 @@ function closeOnErr(err) {
 
 const request = Buffer.from(JSON.stringify({
     "sourceUrls": [
-        "https://das-test.monotype.com/filevault/v1/file/versions/1" //infuture replace this with the URL of the service which will provide the file.
+        filedownloadurl
     ],
-    "responseQueue": "mosaic.test.fontanalysis-result"
+    "responseQueue": consumerqueuename
 }));
 
 setTimeout(function () {
-    publish("fontmetadatarequest", request);
+    publish(publishqueuename, request);
 }, 5000);
 
 start();

@@ -1,8 +1,14 @@
 var amqp = require('amqplib/callback_api');
+const uri = ""; //Provide  rabbitmq connection uri
+const consumerqueuename = ""; //provide consumer queue name
 // if the connection is closed or fails to be established at all, we will reconnect
 var amqpConn = null;
 function start() {
-    amqp.connect("amqp://guest:guest@rabbitmq-test-rabbitmq-1493687737.us-east-1.elb.amazonaws.com:5672?heartbeat=60", function (err, conn) {
+    if(uri == '' || consumerqueuename ==''){
+        console.log(`Missing config values uri ${uri}, consumerqueuename ${consumerqueuename}`);
+        return true;
+    }
+    amqp.connect(uri, function (err, conn) {
         if (err) {
             console.error("[AMQP Error]", err);
            
@@ -35,9 +41,9 @@ function start() {
             console.log("[AMQP] channel closed");
         });
         ch.prefetch(10);
-        ch.assertQueue("mosaic.test.fontanalysis-result", { durable: true },  (err, _ok) =>{
+        ch.assertQueue(consumerqueuename, { durable: true },  (err, _ok) =>{
             if (closeOnErr(err)) return;
-            ch.consume("mosaic.test.fontanalysis-result", processMsg, { noAck: false }, (err,ok)=>{ 
+            ch.consume(consumerqueuename, processMsg, { noAck: false }, (err,ok)=>{ 
                 console.log(ok);});
             console.log("Worker is started");
         });
