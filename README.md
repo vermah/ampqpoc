@@ -1,8 +1,8 @@
 In publisher and consumer provide connection values.
 
 To run publisher
-# node publisher.js
+* node publisher.js
 
 To run consumer
-# node consumer.js 
+* node consumer.js 
 
