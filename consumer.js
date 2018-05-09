@@ -1,6 +1,9 @@
 var amqp = require('amqplib/callback_api');
-const uri = ""; //Provide  rabbitmq connection uri
-const consumerqueuename = ""; //provide consumer queue name
+var fs = require('fs');
+
+
+const uri = "";
+const consumerqueuename = "";
 // if the connection is closed or fails to be established at all, we will reconnect
 var amqpConn = null;
 function start() {
@@ -64,7 +67,14 @@ function start() {
 }
 
 function work(msg, cb) {
-    console.log("Message received: ", msg.content.toString());
+    console.log("Message received writing to file metadata.json: ");
+    fs.writeFile("metadata.json", msg.content.toString(), function(err) {
+        if(err) {
+            return console.log(err);
+        }
+    
+        console.log("The file was saved!");
+    }); 
     cb(true);
 }
 
