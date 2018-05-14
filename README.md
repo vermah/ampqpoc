@@ -10,3 +10,6 @@ To run publisher
 To run consumer
 * node consumer.js 
 
+To run fsr-ingestion
+* node fsr-ingestion.js <file download path> <md5>
+
