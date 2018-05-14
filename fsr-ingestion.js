@@ -30,8 +30,8 @@ function startIngestion() {
                 method: 'PUT',
                 json: post_data,
                 auth: {
-                    'user': 'data_user',
-                    'pass': 't3stTr0nic',
+                    'user': '*****',
+                    'pass': '*****',
                     'sendImmediately': false
                 },
                 headers: {
